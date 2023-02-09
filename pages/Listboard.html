@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Score Board</title>
+</head>
+<body>
+   <div id = "container">
+    <script>
+        fetch("/getScore").then(function(score){
+            score.json().then(function(theScore){
+                console.log(theScore)
+                    //append our container html
+                    for(let score of theScore.score)
+                    {
+                        var gameElement = document.createElement('p')
+                        gameElement.innerHTML = score.score
+                        document.getElementById("container").appendChild(gameElement)
+                          // add delete button
+                          var deletebutton =document.createElement("button")
+                                deletebutton.innerText = "Delete Score"
+                                deletebutton.addEventListener("click",function(){
+                                    //fetch Request to server to delete the game
+                                    location.reload()
+                                    fetch("/deleteSave", {
+                                        method:"POST",
+                                        headers:{
+                                            "Content-Type":"application/json"
+
+                                        },
+                                        body:JSON.stringify({
+                                            score:score
+                                        })
+                                    })
+                                })
+                                
+                                gameElement.appendChild(deletebutton)
+
+
+                            
+                    }
+            })
+        })
+        </script>
+</body>
+</html>
